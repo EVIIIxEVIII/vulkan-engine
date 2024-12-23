@@ -129,6 +129,30 @@ VulkanApp/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/build
 .PHONY : VulkanApp/fast
 
+src/engine/backend/VulkanBufferManager.o: src/engine/backend/VulkanBufferManager.cpp.o
+.PHONY : src/engine/backend/VulkanBufferManager.o
+
+# target to build an object file
+src/engine/backend/VulkanBufferManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o
+.PHONY : src/engine/backend/VulkanBufferManager.cpp.o
+
+src/engine/backend/VulkanBufferManager.i: src/engine/backend/VulkanBufferManager.cpp.i
+.PHONY : src/engine/backend/VulkanBufferManager.i
+
+# target to preprocess a source file
+src/engine/backend/VulkanBufferManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.i
+.PHONY : src/engine/backend/VulkanBufferManager.cpp.i
+
+src/engine/backend/VulkanBufferManager.s: src/engine/backend/VulkanBufferManager.cpp.s
+.PHONY : src/engine/backend/VulkanBufferManager.s
+
+# target to generate assembly for a file
+src/engine/backend/VulkanBufferManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.s
+.PHONY : src/engine/backend/VulkanBufferManager.cpp.s
+
 src/engine/backend/VulkanContext.o: src/engine/backend/VulkanContext.cpp.o
 .PHONY : src/engine/backend/VulkanContext.o
 
@@ -201,6 +225,30 @@ src/engine/backend/VulkanGraphicsPipeline.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.s
 .PHONY : src/engine/backend/VulkanGraphicsPipeline.cpp.s
 
+src/engine/backend/VulkanImageHandler.o: src/engine/backend/VulkanImageHandler.cpp.o
+.PHONY : src/engine/backend/VulkanImageHandler.o
+
+# target to build an object file
+src/engine/backend/VulkanImageHandler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o
+.PHONY : src/engine/backend/VulkanImageHandler.cpp.o
+
+src/engine/backend/VulkanImageHandler.i: src/engine/backend/VulkanImageHandler.cpp.i
+.PHONY : src/engine/backend/VulkanImageHandler.i
+
+# target to preprocess a source file
+src/engine/backend/VulkanImageHandler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.i
+.PHONY : src/engine/backend/VulkanImageHandler.cpp.i
+
+src/engine/backend/VulkanImageHandler.s: src/engine/backend/VulkanImageHandler.cpp.s
+.PHONY : src/engine/backend/VulkanImageHandler.s
+
+# target to generate assembly for a file
+src/engine/backend/VulkanImageHandler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.s
+.PHONY : src/engine/backend/VulkanImageHandler.cpp.s
+
 src/engine/backend/VulkanManager.o: src/engine/backend/VulkanManager.cpp.o
 .PHONY : src/engine/backend/VulkanManager.o
 
@@ -225,29 +273,29 @@ src/engine/backend/VulkanManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.s
 .PHONY : src/engine/backend/VulkanManager.cpp.s
 
-src/engine/backend/VulkanMemoryManager.o: src/engine/backend/VulkanMemoryManager.cpp.o
-.PHONY : src/engine/backend/VulkanMemoryManager.o
+src/engine/backend/VulkanSingleTimeCommand.o: src/engine/backend/VulkanSingleTimeCommand.cpp.o
+.PHONY : src/engine/backend/VulkanSingleTimeCommand.o
 
 # target to build an object file
-src/engine/backend/VulkanMemoryManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o
-.PHONY : src/engine/backend/VulkanMemoryManager.cpp.o
+src/engine/backend/VulkanSingleTimeCommand.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o
+.PHONY : src/engine/backend/VulkanSingleTimeCommand.cpp.o
 
-src/engine/backend/VulkanMemoryManager.i: src/engine/backend/VulkanMemoryManager.cpp.i
-.PHONY : src/engine/backend/VulkanMemoryManager.i
+src/engine/backend/VulkanSingleTimeCommand.i: src/engine/backend/VulkanSingleTimeCommand.cpp.i
+.PHONY : src/engine/backend/VulkanSingleTimeCommand.i
 
 # target to preprocess a source file
-src/engine/backend/VulkanMemoryManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.i
-.PHONY : src/engine/backend/VulkanMemoryManager.cpp.i
+src/engine/backend/VulkanSingleTimeCommand.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.i
+.PHONY : src/engine/backend/VulkanSingleTimeCommand.cpp.i
 
-src/engine/backend/VulkanMemoryManager.s: src/engine/backend/VulkanMemoryManager.cpp.s
-.PHONY : src/engine/backend/VulkanMemoryManager.s
+src/engine/backend/VulkanSingleTimeCommand.s: src/engine/backend/VulkanSingleTimeCommand.cpp.s
+.PHONY : src/engine/backend/VulkanSingleTimeCommand.s
 
 # target to generate assembly for a file
-src/engine/backend/VulkanMemoryManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.s
-.PHONY : src/engine/backend/VulkanMemoryManager.cpp.s
+src/engine/backend/VulkanSingleTimeCommand.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VulkanApp.dir/build.make CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.s
+.PHONY : src/engine/backend/VulkanSingleTimeCommand.cpp.s
 
 src/engine/backend/VulkanSwapChain.o: src/engine/backend/VulkanSwapChain.cpp.o
 .PHONY : src/engine/backend/VulkanSwapChain.o
@@ -330,6 +378,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... VulkanApp"
+	@echo "... src/engine/backend/VulkanBufferManager.o"
+	@echo "... src/engine/backend/VulkanBufferManager.i"
+	@echo "... src/engine/backend/VulkanBufferManager.s"
 	@echo "... src/engine/backend/VulkanContext.o"
 	@echo "... src/engine/backend/VulkanContext.i"
 	@echo "... src/engine/backend/VulkanContext.s"
@@ -339,12 +390,15 @@ help:
 	@echo "... src/engine/backend/VulkanGraphicsPipeline.o"
 	@echo "... src/engine/backend/VulkanGraphicsPipeline.i"
 	@echo "... src/engine/backend/VulkanGraphicsPipeline.s"
+	@echo "... src/engine/backend/VulkanImageHandler.o"
+	@echo "... src/engine/backend/VulkanImageHandler.i"
+	@echo "... src/engine/backend/VulkanImageHandler.s"
 	@echo "... src/engine/backend/VulkanManager.o"
 	@echo "... src/engine/backend/VulkanManager.i"
 	@echo "... src/engine/backend/VulkanManager.s"
-	@echo "... src/engine/backend/VulkanMemoryManager.o"
-	@echo "... src/engine/backend/VulkanMemoryManager.i"
-	@echo "... src/engine/backend/VulkanMemoryManager.s"
+	@echo "... src/engine/backend/VulkanSingleTimeCommand.o"
+	@echo "... src/engine/backend/VulkanSingleTimeCommand.i"
+	@echo "... src/engine/backend/VulkanSingleTimeCommand.s"
 	@echo "... src/engine/backend/VulkanSwapChain.o"
 	@echo "... src/engine/backend/VulkanSwapChain.i"
 	@echo "... src/engine/backend/VulkanSwapChain.s"

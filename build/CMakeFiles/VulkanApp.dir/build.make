@@ -69,10 +69,24 @@ include CMakeFiles/VulkanApp.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/VulkanApp.dir/flags.make
 
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanBufferManager.cpp
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanBufferManager.cpp
+
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanBufferManager.cpp > CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.i
+
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanBufferManager.cpp -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.s
+
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanContext.cpp
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanContext.cpp
 
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.i: cmake_force
@@ -86,7 +100,7 @@ CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.s: cmake_force
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanDescriptors.cpp
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanDescriptors.cpp
 
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.i: cmake_force
@@ -100,7 +114,7 @@ CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.s: cmake_force
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanGraphicsPipeline.cpp
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanGraphicsPipeline.cpp
 
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.i: cmake_force
@@ -111,10 +125,24 @@ CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.s: cmake_
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanGraphicsPipeline.cpp -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.s
 
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanImageHandler.cpp
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanImageHandler.cpp
+
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanImageHandler.cpp > CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.i
+
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanImageHandler.cpp -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.s
+
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanManager.cpp
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanManager.cpp
 
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.i: cmake_force
@@ -125,24 +153,24 @@ CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanManager.cpp -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.s
 
-CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
-CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanMemoryManager.cpp
-CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanMemoryManager.cpp
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanSingleTimeCommand.cpp
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanSingleTimeCommand.cpp
 
-CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanMemoryManager.cpp > CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.i
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanSingleTimeCommand.cpp > CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.i
 
-CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanMemoryManager.cpp -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.s
+CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanSingleTimeCommand.cpp -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.s
 
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanSwapChain.cpp
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanSwapChain.cpp
 
 CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.i: cmake_force
@@ -156,7 +184,7 @@ CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.s: cmake_force
 CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
 CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/Window.cpp
 CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o -MF CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/Window.cpp
 
 CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.i: cmake_force
@@ -170,7 +198,7 @@ CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.s: cmake_force
 CMakeFiles/VulkanApp.dir/src/main.cpp.o: CMakeFiles/VulkanApp.dir/flags.make
 CMakeFiles/VulkanApp.dir/src/main.cpp.o: /home/alderson/Projects/Mine/vulkan-engine/src/main.cpp
 CMakeFiles/VulkanApp.dir/src/main.cpp.o: CMakeFiles/VulkanApp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/VulkanApp.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/VulkanApp.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VulkanApp.dir/src/main.cpp.o -MF CMakeFiles/VulkanApp.dir/src/main.cpp.o.d -o CMakeFiles/VulkanApp.dir/src/main.cpp.o -c /home/alderson/Projects/Mine/vulkan-engine/src/main.cpp
 
 CMakeFiles/VulkanApp.dir/src/main.cpp.i: cmake_force
@@ -183,11 +211,13 @@ CMakeFiles/VulkanApp.dir/src/main.cpp.s: cmake_force
 
 # Object files for target VulkanApp
 VulkanApp_OBJECTS = \
+"CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o" \
 "CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o" \
 "CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o" \
 "CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o" \
+"CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o" \
 "CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o" \
-"CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o" \
+"CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o" \
 "CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o" \
 "CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o" \
 "CMakeFiles/VulkanApp.dir/src/main.cpp.o"
@@ -195,18 +225,20 @@ VulkanApp_OBJECTS = \
 # External object files for target VulkanApp
 VulkanApp_EXTERNAL_OBJECTS =
 
+VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanBufferManager.cpp.o
 VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanContext.cpp.o
 VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o
 VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o
+VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanImageHandler.cpp.o
 VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanManager.cpp.o
-VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanMemoryManager.cpp.o
+VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSingleTimeCommand.cpp.o
 VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanSwapChain.cpp.o
 VulkanApp: CMakeFiles/VulkanApp.dir/src/engine/backend/Window.cpp.o
 VulkanApp: CMakeFiles/VulkanApp.dir/src/main.cpp.o
 VulkanApp: CMakeFiles/VulkanApp.dir/build.make
 VulkanApp: /usr/lib/x86_64-linux-gnu/libvulkan.so
 VulkanApp: CMakeFiles/VulkanApp.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable VulkanApp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/alderson/Projects/Mine/vulkan-engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable VulkanApp"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/VulkanApp.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

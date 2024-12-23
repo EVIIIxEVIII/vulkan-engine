@@ -136,7 +136,7 @@ CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanGraphicsPipeline.cpp.o: \
  /usr/include/c++/13/bits/charconv.h \
  /usr/include/c++/13/bits/basic_string.tcc \
  /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanDescriptors.h \
- /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanMemoryManager.h \
+ /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanBufferManager.h \
  /usr/include/c++/13/cstdint /usr/include/vulkan/vulkan_core.h \
  /usr/include/glm/mat4x4.hpp /usr/include/glm/ext/matrix_double4x4.hpp \
  /usr/include/glm/detail/type_mat4x4.hpp \

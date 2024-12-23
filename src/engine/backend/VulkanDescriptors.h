@@ -1,12 +1,13 @@
 #pragma once
 
-#include "VulkanMemoryManager.h"
+#include "VulkanBufferManager.h"
 #include <vector>
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_core.h>
 #include <glm/mat4x4.hpp>
 
 class VulkanContext;
+class VulkanSingleTimeCommand;
 
 struct UniformBufferObject {
     alignas(16) glm::mat4 model;
@@ -23,14 +24,14 @@ public:
     void cleanup(VulkanContext& context);
 
 public:
-    const VkDescriptorSetLayout&    getDescriptorSetLayout() const { return m_descriptorSetLayout;}
-    VkDescriptorPool                getDescriptorPool()      { return m_descriptorPool; }
-    std::vector<VkDescriptorSet>    getDescriptorSets()      { return m_descriptorSets; }
+    const VkDescriptorSetLayout&    getDescriptorSetLayout() const { return m_descriptorSetLayout; }
+    VkDescriptorPool                getDescriptorPool()      const { return m_descriptorPool; }
+    std::vector<VkDescriptorSet>    getDescriptorSets()      const { return m_descriptorSets; }
 
 private:
     void createDescriptorSetLayout(VulkanContext& context);
     void createDescriptorPool(VulkanContext& context, uint32_t MAX_FRAMES_IN_FLIGHT);
-    void createDescriptorSets(VulkanContext& context, uint32_t MAX_FRAMES_IN_FLIGHT);
+    void createDescriptorSets(VulkanContext& context, VulkanSingleTimeCommand& singleTimeCommand, uint32_t MAX_FRAMES_IN_FLIGHT);
 
 private:
     VkDescriptorSetLayout m_descriptorSetLayout;

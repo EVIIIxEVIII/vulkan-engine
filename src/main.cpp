@@ -1,5 +1,3 @@
-#include "engine/backend/VulkanContext.h"
-#include "engine/backend/VulkanSwapChain.h"
 #define GLFW_INCLUDE_VULKAN
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
@@ -30,17 +28,20 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdint>
-#include <optional>
 #include <array>
 #include <chrono>
 #include <unordered_map>
 
 #include "./engine/backend/Window.h"
+#include "./engine/backend/Vertex.h"
+
 #include "./engine/backend/VulkanContext.h"
 #include "./engine/backend/VulkanSwapChain.h"
 #include "./engine/backend/VulkanGraphicsPipeline.h"
 #include "./engine/backend/VulkanDescriptors.h"
-#include "./engine/backend/Vertex.h"
+#include "./engine/backend/VulkanSingleTimeCommand.h"
+#include "./engine/backend/VulkanImageHandler.h"
+#include "./engine/backend/VulkanBufferManager.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -57,12 +58,16 @@ public:
         Window& window,
         VulkanContext& context,
         VulkanSwapChain& swapChain,
+        VulkanBufferManager& bufferManger,
+        VulkanSingleTimeCommand& singleTimeCommand,
         VulkanDescriptors& descriptors,
         VulkanGraphicsPipeline& graphicsPipeline
     ):
         window(window),
         context(context),
         swapChain(swapChain),
+        bufferManager(bufferManger),
+        singleTimeCommand(singleTimeCommand),
         descriptors(descriptors),
         graphicsPipeline(graphicsPipeline)
     {}
@@ -77,12 +82,12 @@ private:
     Window& window;
     VulkanContext& context;
     VulkanSwapChain& swapChain;
+    VulkanBufferManager& bufferManager;
+    VulkanSingleTimeCommand& singleTimeCommand;
     VulkanDescriptors& descriptors;
     VulkanGraphicsPipeline& graphicsPipeline;
 
     std::vector<VkFramebuffer> swapChainFramebuffers;
-
-    VkCommandPool commandPool;
 
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -112,8 +117,6 @@ private:
 
     std::vector<VkDescriptorSet> descriptorSets;
 
-    std::vector<VkCommandBuffer> commandBuffers;
-
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
@@ -121,7 +124,6 @@ private:
     uint32_t currentFrame = 0;
 
     void initVulkan() {
-        createCommandPool();
         createColorResources();
         createDepthResources();
 
@@ -137,23 +139,10 @@ private:
         createUniformBuffers();
 
         createDescriptorSets();
-        createCommandBuffers();
 
         createSyncObjects();
     }
 
-    void createCommandPool() {
-        QueueFamilyIndices queueFamilyIndices = context.getQueueFamilyIndices();
-
-        VkCommandPoolCreateInfo poolInfo{};
-        poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-        poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-        poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
-
-        if(vkCreateCommandPool(context.getDevice(), &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create command pool!");
-        }
-    }
     void mainLoop() {
         auto lastTime = std::chrono::high_resolution_clock::now();
         int frameCount = 0;
@@ -224,8 +213,7 @@ private:
             vkDestroyFence(context.getDevice(), inFlightFences[i], nullptr);
         }
 
-        vkDestroyCommandPool(context.getDevice(), commandPool, nullptr);
-
+        singleTimeCommand.cleanup(context);
         context.cleanup();
         glfwTerminate();
     }
@@ -312,7 +300,7 @@ private:
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+        allocInfo.memoryTypeIndex = bufferManager.findMemoryType(memRequirements.memoryTypeBits, properties);
 
         if (vkAllocateMemory(context.getDevice(), &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate image memory!");
@@ -361,7 +349,6 @@ private:
         );
 
         colorImageView = createImageView(colorImage, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
-
     }
 
     void createTextureImage() {
@@ -377,7 +364,7 @@ private:
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
 
-        createBuffer(
+        bufferManager.createBuffer(
             imageSize,
             VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -428,7 +415,7 @@ private:
             throw std::runtime_error("texture image format does not support linear blitting!");
         }
 
-        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+        VkCommandBuffer commandBuffer = singleTimeCommand.beginSingleTimeCommands(context);
 
         VkImageMemoryBarrier barrier{};
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -520,100 +507,11 @@ private:
             1, &barrier
         );
 
-        endSingleTimeCommands(commandBuffer);
-    }
-
-    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
-        VkPhysicalDeviceMemoryProperties memProperties;
-        vkGetPhysicalDeviceMemoryProperties(context.getPhysicalDevice(), &memProperties);
-
-        for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-            if(typeFilter & (1 << i) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
-                return i;
-            }
-        }
-
-        throw std::runtime_error("failed to find suitable memory type!");
-    }
-
-    VkCommandBuffer beginSingleTimeCommands() {
-        VkCommandBufferAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        allocInfo.commandPool = commandPool;
-        allocInfo.commandBufferCount = 1;
-
-        VkCommandBuffer commandBuffer;
-        vkAllocateCommandBuffers(context.getDevice(), &allocInfo, &commandBuffer);
-
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-        vkBeginCommandBuffer(commandBuffer, &beginInfo);
-        return commandBuffer;
-    }
-
-    void endSingleTimeCommands(VkCommandBuffer commandBuffer) {
-        vkEndCommandBuffer(commandBuffer);
-
-        VkSubmitInfo submitInfo{};
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &commandBuffer;
-
-        vkQueueSubmit(context.getGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-        vkQueueWaitIdle(context.getGraphicsQueue());
-        vkFreeCommandBuffers(context.getDevice(), commandPool, 1, &commandBuffer);
-    }
-
-    void createBuffer(
-        VkDeviceSize size,
-        VkBufferUsageFlags usage,
-        VkMemoryPropertyFlags properties,
-        VkBuffer& buffer,
-        VkDeviceMemory& bufferMemory
-    ) {
-        VkBufferCreateInfo bufferInfo{};
-        bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        bufferInfo.size = size;
-        bufferInfo.usage = usage;
-        bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-        if (vkCreateBuffer(context.getDevice(), &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create buffer!");
-        }
-
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(context.getDevice(), buffer, &memRequirements);
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(
-            memRequirements.memoryTypeBits,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-        );
-
-        if (vkAllocateMemory(context.getDevice(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate buffer memory!");
-        }
-
-        vkBindBufferMemory(context.getDevice(), buffer, bufferMemory, 0);
-
-    }
-
-    void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
-        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
-
-        VkBufferCopy copyRegion{};
-        copyRegion.size = size;
-        vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
-        endSingleTimeCommands(commandBuffer);
+        singleTimeCommand.endSingleTimeCommands(context, commandBuffer);
     }
 
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height) {
-        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+        VkCommandBuffer commandBuffer = singleTimeCommand.beginSingleTimeCommands(context);
         VkBufferImageCopy region{};
         region.bufferOffset = 0;
         region.bufferRowLength = 0;
@@ -639,11 +537,11 @@ private:
             1,
             &region
         );
-        endSingleTimeCommands(commandBuffer);
+        singleTimeCommand.endSingleTimeCommands(context, commandBuffer);
     }
 
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels) {
-        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+        VkCommandBuffer commandBuffer = singleTimeCommand.beginSingleTimeCommands(context);
         VkImageMemoryBarrier barrier{};
 
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -705,12 +603,11 @@ private:
             1, &barrier
         );
 
-        endSingleTimeCommands(commandBuffer);
+        singleTimeCommand.endSingleTimeCommands(context, commandBuffer);
     }
 
     void createTextureImageView() {
         textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
-
     }
 
     VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels) {
@@ -814,7 +711,7 @@ private:
         VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
-        createBuffer(
+        bufferManager.createBuffer(
             bufferSize,
             VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -827,7 +724,7 @@ private:
         memcpy(data, vertices.data(), (size_t) bufferSize);
         vkUnmapMemory(context.getDevice(), stagingBufferMemory);
 
-        createBuffer(
+        bufferManager.createBuffer(
             bufferSize,
             VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
@@ -835,7 +732,7 @@ private:
             vertexBufferMemory
         );
 
-        copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
+        bufferManager.copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
 
         vkDestroyBuffer(context.getDevice(), stagingBuffer, nullptr);
         vkFreeMemory(context.getDevice(), stagingBufferMemory, nullptr);
@@ -846,7 +743,7 @@ private:
 
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
-        createBuffer(
+        bufferManager.createBuffer(
             bufferSize,
             VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -859,7 +756,7 @@ private:
         memcpy(data, indices.data(), (size_t) bufferSize);
         vkUnmapMemory(context.getDevice(), stagingBufferMemory);
 
-        createBuffer(
+        bufferManager.createBuffer(
             bufferSize,
             VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
@@ -867,7 +764,7 @@ private:
             indexBufferMemory
         );
 
-        copyBuffer(stagingBuffer, indexBuffer, bufferSize);
+        bufferManager.copyBuffer(stagingBuffer, indexBuffer, bufferSize);
 
         vkDestroyBuffer(context.getDevice(), stagingBuffer, nullptr);
         vkFreeMemory(context.getDevice(), stagingBufferMemory, nullptr);
@@ -881,7 +778,7 @@ private:
         uniformBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            createBuffer(
+            bufferManager.createBuffer(
                 bufferSize,
                 VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -942,20 +839,6 @@ private:
             descriptorWrites[1].pImageInfo = &imageInfo;
 
             vkUpdateDescriptorSets(context.getDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
-        }
-    }
-
-    void createCommandBuffers() {
-        commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
-
-        VkCommandBufferAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        allocInfo.commandPool = commandPool;
-        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
-
-        if (vkAllocateCommandBuffers(context.getDevice(), &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate command buffers!");
         }
     }
 
@@ -1055,8 +938,8 @@ private:
         }
 
         vkResetFences(context.getDevice(), 1, &inFlightFences[currentFrame]);
-        vkResetCommandBuffer(commandBuffers[currentFrame], 0);
-        recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
+        vkResetCommandBuffer(singleTimeCommand.getCommandBuffers()[currentFrame], 0);
+        recordCommandBuffer(singleTimeCommand.getCommandBuffers()[currentFrame], imageIndex);
 
         updateUniformBuffer(currentFrame);
 
@@ -1070,7 +953,10 @@ private:
         submitInfo.pWaitDstStageMask = waitStages;
 
         submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &commandBuffers[currentFrame];
+
+        // VkCommandBuffer commandBuffer = singleTimeCommand.getCommandBuffers()[currentFrame];
+        // submitInfo.pCommandBuffers = &commandBuffer;
+        submitInfo.pCommandBuffers = &singleTimeCommand.getCommandBuffers()[currentFrame];
 
         VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
         submitInfo.signalSemaphoreCount = 1;
@@ -1140,6 +1026,13 @@ int main() {
     VulkanSwapChain swapChain;
     swapChain.init(context, window);
 
+    VulkanSingleTimeCommand singleTimeCommand;
+    singleTimeCommand.init(context, MAX_FRAMES_IN_FLIGHT);
+
+    VulkanBufferManager bufferManger(context, singleTimeCommand);
+
+    VulkanImageHandler imageHandler(context, singleTimeCommand, bufferManger);
+
     VulkanDescriptors descriptors;
     descriptors.init(context, MAX_FRAMES_IN_FLIGHT);
 
@@ -1150,6 +1043,8 @@ int main() {
         window,
         context,
         swapChain,
+        bufferManger,
+        singleTimeCommand,
         descriptors,
         graphicsPipeline
     );

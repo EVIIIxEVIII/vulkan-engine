@@ -1,12 +1,14 @@
-#include "VulkanMemoryManager.h"
+#include "VulkanBufferManager.h"
+#include "VulkanSingleTimeCommand.h"
+
 #include <stdexcept>
 #include <vulkan/vulkan.h>
 
 #include "VulkanContext.h"
 
-uint32_t VulkanMemoryManager::findMemoryType(VulkanContext& context, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+uint32_t VulkanBufferManager::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
     VkPhysicalDeviceMemoryProperties memProperties;
-    vkGetPhysicalDeviceMemoryProperties(context.getPhysicalDevice(), &memProperties);
+    vkGetPhysicalDeviceMemoryProperties(m_context.getPhysicalDevice(), &memProperties);
 
     for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
         if(typeFilter & (1 << i) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
@@ -17,8 +19,7 @@ uint32_t VulkanMemoryManager::findMemoryType(VulkanContext& context, uint32_t ty
     throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void VulkanMemoryManager::createBuffer(
-    VulkanContext& context,
+void VulkanBufferManager::createBuffer(
     VkDeviceSize size,
     VkBufferUsageFlags usage,
     VkMemoryPropertyFlags properties,
@@ -31,25 +32,33 @@ void VulkanMemoryManager::createBuffer(
     bufferInfo.usage = usage;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-    if (vkCreateBuffer(context.getDevice(), &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
+    if (vkCreateBuffer(m_context.getDevice(), &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
         throw std::runtime_error("failed to create buffer!");
     }
 
     VkMemoryRequirements memRequirements;
-    vkGetBufferMemoryRequirements(context.getDevice(), buffer, &memRequirements);
+    vkGetBufferMemoryRequirements(m_context.getDevice(), buffer, &memRequirements);
     VkMemoryAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocInfo.allocationSize = memRequirements.size;
     allocInfo.memoryTypeIndex = findMemoryType(
-        context,
         memRequirements.memoryTypeBits,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+        properties
     );
 
-    if (vkAllocateMemory(context.getDevice(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
+    if (vkAllocateMemory(m_context.getDevice(), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
         throw std::runtime_error("failed to allocate buffer memory!");
     }
 
-    vkBindBufferMemory(context.getDevice(), buffer, bufferMemory, 0);
+    vkBindBufferMemory(m_context.getDevice(), buffer, bufferMemory, 0);
+}
 
+void VulkanBufferManager::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+    VkCommandBuffer commandBuffer = m_singleTimeCommand.beginSingleTimeCommands(m_context);
+
+    VkBufferCopy copyRegion{};
+    copyRegion.size = size;
+    vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
+    m_singleTimeCommand.endSingleTimeCommands(m_context, commandBuffer);
 }

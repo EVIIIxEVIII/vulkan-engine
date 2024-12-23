@@ -2,7 +2,7 @@ CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o: \
  /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanDescriptors.cpp \
  /usr/include/stdc-predef.h \
  /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanDescriptors.h \
- /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanMemoryManager.h \
+ /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanBufferManager.h \
  /usr/include/c++/13/cstdint \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -273,5 +273,6 @@ CMakeFiles/VulkanApp.dir/src/engine/backend/VulkanDescriptors.cpp.o: \
  /usr/include/c++/13/bits/cxxabi_init_exception.h \
  /usr/include/c++/13/typeinfo /usr/include/c++/13/bits/nested_exception.h \
  /usr/include/c++/13/bits/enable_special_members.h \
+ /home/alderson/Projects/Mine/vulkan-engine/src/engine/backend/VulkanSingleTimeCommand.h \
  /usr/include/c++/13/stdexcept /usr/include/c++/13/array \
  /usr/include/c++/13/compare
