@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdexcept>
 
+namespace Vulkan {
+
 class Window {
 
 public:
@@ -27,3 +29,5 @@ private:
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
     void onFramebufferResize(int width, int height);
 };
+
+}

@@ -3,16 +3,16 @@
 
 #include <stdexcept>
 
-void VulkanSingleTimeCommand::init(VulkanContext& context, uint32_t MAX_FRAMES_IN_FLIGHT) {
+void Vulkan::SingleTimeCommand::init(Context& context, uint32_t MAX_FRAMES_IN_FLIGHT) {
     createCommandPool(context);
     createCommandBuffers(context, MAX_FRAMES_IN_FLIGHT);
 }
 
-void VulkanSingleTimeCommand::cleanup(VulkanContext& context) {
+void Vulkan::SingleTimeCommand::cleanup(Context& context) {
     vkDestroyCommandPool(context.getDevice(), m_commandPool, nullptr);
 }
 
-void VulkanSingleTimeCommand::createCommandPool(VulkanContext& context) {
+void Vulkan::SingleTimeCommand::createCommandPool(Context& context) {
     const QueueFamilyIndices queueFamilyIndices = context.getQueueFamilyIndices();
 
     VkCommandPoolCreateInfo poolInfo{};
@@ -25,7 +25,7 @@ void VulkanSingleTimeCommand::createCommandPool(VulkanContext& context) {
     }
 }
 
-void VulkanSingleTimeCommand::createCommandBuffers(VulkanContext& context, uint32_t MAX_FRAMES_IN_FLIGHT) {
+void Vulkan::SingleTimeCommand::createCommandBuffers(Context& context, uint32_t MAX_FRAMES_IN_FLIGHT) {
     m_commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
 
     VkCommandBufferAllocateInfo allocInfo{};
@@ -39,7 +39,7 @@ void VulkanSingleTimeCommand::createCommandBuffers(VulkanContext& context, uint3
     }
 }
 
-VkCommandBuffer VulkanSingleTimeCommand::beginSingleTimeCommands(VulkanContext& context) {
+VkCommandBuffer Vulkan::SingleTimeCommand::beginSingleTimeCommands(Context& context) {
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -57,7 +57,7 @@ VkCommandBuffer VulkanSingleTimeCommand::beginSingleTimeCommands(VulkanContext& 
     return commandBuffer;
 }
 
-void VulkanSingleTimeCommand::endSingleTimeCommands(VulkanContext& context, VkCommandBuffer commandBuffer) {
+void Vulkan::SingleTimeCommand::endSingleTimeCommands(Context& context, VkCommandBuffer commandBuffer) {
     vkEndCommandBuffer(commandBuffer);
 
     VkSubmitInfo submitInfo{};

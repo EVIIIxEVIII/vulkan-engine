@@ -3,35 +3,37 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <string>
-#include "VulkanDescriptors.h"
-#include "VulkanSwapChain.h"
 #include <glm/mat4x4.hpp>
 #include <vulkan/vulkan_core.h>
 
-class VulkanContext;
-class Window;
+namespace Vulkan {
 
-class VulkanGraphicsPipeline {
+class Context;
+class Window;
+class Descriptors;
+class SwapChain;
+
+class GraphicsPipeline {
 
 public:
-    VulkanGraphicsPipeline();
-    ~VulkanGraphicsPipeline();
+    GraphicsPipeline();
+    ~GraphicsPipeline();
 
-    void init(VulkanContext& context,  Window& window, VulkanSwapChain& swapChain, VulkanDescriptors& descriptors);
-    void cleanup(VulkanContext& context);
+    void init(Context& context,  Window& window, SwapChain& swapChain, Descriptors& descriptors);
+    void cleanup(Context& context);
 
-    VkFormat findDepthFormat(VulkanContext& context);
+    VkFormat findDepthFormat(Context& context);
 
     VkRenderPass            getRenderPass()             { return m_renderPass; }
     VkPipeline              getGraphicsPipeline()       { return m_graphicsPipeline; }
     VkPipelineLayout        getGraphicsPipelineLayout() { return m_pipelineLayout; }
 
 private:
-    void createRenderPass(VulkanContext& context, VulkanSwapChain& swapChain);
-    void createGraphicsPipeline(VulkanContext& context, VulkanSwapChain& swapChain, VulkanDescriptors& descriptors);
+    void createRenderPass(Context& context, SwapChain& swapChain);
+    void createGraphicsPipeline(Context& context, SwapChain& swapChain, Descriptors& descriptors);
 
-    VkShaderModule createShaderModule(VulkanContext& context, const std::vector<char>& code);
-    VkFormat findSupportedFormat(VulkanContext& context, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+    VkShaderModule createShaderModule(Context& context, const std::vector<char>& code);
+    VkFormat findSupportedFormat(Context& context, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     static std::vector<char> readFile(const std::string& filename);
 
 private:
@@ -39,3 +41,5 @@ private:
     VkPipelineLayout                m_pipelineLayout = VK_NULL_HANDLE;
     VkPipeline                      m_graphicsPipeline = VK_NULL_HANDLE;
 };
+
+}

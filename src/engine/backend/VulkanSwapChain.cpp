@@ -9,27 +9,27 @@
 #include <GLFW/glfw3.h>
 #include <limits>
 
-VulkanSwapChain::VulkanSwapChain() {}
-VulkanSwapChain::~VulkanSwapChain() {}
+Vulkan::SwapChain::SwapChain() {}
+Vulkan::SwapChain::~SwapChain() {}
 
-void VulkanSwapChain::init(VulkanContext& context, Window& window) {
+void Vulkan::SwapChain::init(Context& context, Window& window) {
     createSwapChain(context, window);
     createImageViews(context);
 }
 
-void VulkanSwapChain::recreate(VulkanContext& context, Window& window) {
+void Vulkan::SwapChain::recreate(Context& context, Window& window) {
     createSwapChain(context, window);
     createImageViews(context);
 }
 
-void VulkanSwapChain::cleanup(VulkanContext& context) {
+void Vulkan::SwapChain::cleanup(Context& context) {
     for (size_t i = 0; i < m_swapChainImageViews.size(); i++) {
         vkDestroyImageView(context.getDevice(), m_swapChainImageViews[i], nullptr);
     }
     vkDestroySwapchainKHR(context.getDevice(), m_swapChain, nullptr);
 }
 
-void VulkanSwapChain::createSwapChain(VulkanContext& context, Window& window) {
+void Vulkan::SwapChain::createSwapChain(Context& context, Window& window) {
     VkPhysicalDevice physicalDevice = context.getPhysicalDevice();
     VkDevice         device = context.getDevice();
 
@@ -85,7 +85,7 @@ void VulkanSwapChain::createSwapChain(VulkanContext& context, Window& window) {
     m_swapChainExtent = extent;
 }
 
-VkImageView VulkanSwapChain::createImageView(VulkanContext& context, VkImage image, VkFormat format) {
+VkImageView Vulkan::SwapChain::createImageView(Context& context, VkImage image, VkFormat format) {
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.image = image;
@@ -105,7 +105,7 @@ VkImageView VulkanSwapChain::createImageView(VulkanContext& context, VkImage ima
     return imageView;
 }
 
-void VulkanSwapChain::createImageViews(VulkanContext& context) {
+void Vulkan::SwapChain::createImageViews(Context& context) {
     m_swapChainImageViews.resize(m_swapChainImages.size());
 
     for (size_t i = 0; i < m_swapChainImages.size(); i++) {
@@ -113,7 +113,7 @@ void VulkanSwapChain::createImageViews(VulkanContext& context) {
     }
 }
 
-VkSurfaceFormatKHR VulkanSwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
+VkSurfaceFormatKHR Vulkan::SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
     for (const auto& availableFormat : availableFormats) {
         if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
             return availableFormat;
@@ -123,7 +123,7 @@ VkSurfaceFormatKHR VulkanSwapChain::chooseSwapSurfaceFormat(const std::vector<Vk
     return availableFormats[0];
 }
 
-VkPresentModeKHR VulkanSwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
+VkPresentModeKHR Vulkan::SwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
     for (const auto& availablePresentMode : availablePresentModes) {
         if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
             return availablePresentMode;
@@ -133,7 +133,7 @@ VkPresentModeKHR VulkanSwapChain::chooseSwapPresentMode(const std::vector<VkPres
     return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-VkExtent2D VulkanSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, Window& window) {
+VkExtent2D Vulkan::SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, Window& window) {
     if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
         return capabilities.currentExtent;
     } else {
@@ -151,4 +151,3 @@ VkExtent2D VulkanSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& cap
         return actualExtent;
     }
 }
-

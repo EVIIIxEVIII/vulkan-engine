@@ -9,22 +9,21 @@
 #include <fstream>
 #include <vulkan/vulkan_core.h>
 
-VulkanGraphicsPipeline::VulkanGraphicsPipeline() {}
-VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {}
+Vulkan::GraphicsPipeline::GraphicsPipeline() {}
+Vulkan::GraphicsPipeline::~GraphicsPipeline() {}
 
-void VulkanGraphicsPipeline::init(VulkanContext& context,  Window& window, VulkanSwapChain& swapChain, VulkanDescriptors& descriptors) {
+void Vulkan::GraphicsPipeline::init(Context& context,  Window& window, SwapChain& swapChain, Descriptors& descriptors) {
     createRenderPass(context, swapChain);
     createGraphicsPipeline(context, swapChain, descriptors);
 }
 
-void VulkanGraphicsPipeline::cleanup(VulkanContext& context) {
-
+void Vulkan::GraphicsPipeline::cleanup(Context& context) {
     vkDestroyRenderPass(context.getDevice(), m_renderPass, nullptr);
     vkDestroyPipeline(context.getDevice(), m_graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(context.getDevice(), m_pipelineLayout, nullptr);
 }
 
-VkFormat VulkanGraphicsPipeline::findDepthFormat(VulkanContext& context) {
+VkFormat Vulkan::GraphicsPipeline::findDepthFormat(Context& context) {
     return findSupportedFormat(
         context,
         {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
@@ -33,8 +32,8 @@ VkFormat VulkanGraphicsPipeline::findDepthFormat(VulkanContext& context) {
     );
 }
 
-VkFormat VulkanGraphicsPipeline::findSupportedFormat(
-    VulkanContext& context,
+VkFormat Vulkan::GraphicsPipeline::findSupportedFormat(
+    Context& context,
     const std::vector<VkFormat>& candidates,
     VkImageTiling tiling,
     VkFormatFeatureFlags features
@@ -52,7 +51,7 @@ VkFormat VulkanGraphicsPipeline::findSupportedFormat(
     throw std::runtime_error("failed to find a supported format!");
 }
 
-void VulkanGraphicsPipeline::createRenderPass(VulkanContext& context, VulkanSwapChain& swapChain) {
+void Vulkan::GraphicsPipeline::createRenderPass(Context& context, SwapChain& swapChain) {
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = swapChain.getImageFormat();
     colorAttachment.samples = context.getMsaaSamples();
@@ -128,7 +127,7 @@ void VulkanGraphicsPipeline::createRenderPass(VulkanContext& context, VulkanSwap
     }
 }
 
-void VulkanGraphicsPipeline::createGraphicsPipeline(VulkanContext& context, VulkanSwapChain& swapChain, VulkanDescriptors& descriptors) {
+void Vulkan::GraphicsPipeline::createGraphicsPipeline(Context& context, SwapChain& swapChain, Descriptors& descriptors) {
     auto vertShaderCode = readFile("src/shaders/vert.spv");
     auto fragShaderCode = readFile("src/shaders/frag.spv");
 
@@ -257,7 +256,7 @@ void VulkanGraphicsPipeline::createGraphicsPipeline(VulkanContext& context, Vulk
     vkDestroyShaderModule(context.getDevice(), vertShaderModule, nullptr);
 }
 
-VkShaderModule VulkanGraphicsPipeline::createShaderModule(VulkanContext& context, const std::vector<char>& code) {
+VkShaderModule Vulkan::GraphicsPipeline::createShaderModule(Context& context, const std::vector<char>& code) {
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.codeSize = code.size();
@@ -271,7 +270,7 @@ VkShaderModule VulkanGraphicsPipeline::createShaderModule(VulkanContext& context
     return shaderModule;
 }
 
-std::vector<char> VulkanGraphicsPipeline::readFile(const std::string& filename) {
+std::vector<char> Vulkan::GraphicsPipeline::readFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
     if (!file.is_open()) {

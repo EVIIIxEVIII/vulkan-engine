@@ -3,10 +3,9 @@
 
 #include <stdexcept>
 #include <vulkan/vulkan.h>
-
 #include "VulkanContext.h"
 
-uint32_t VulkanBufferManager::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+uint32_t Vulkan::BufferManager::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
     VkPhysicalDeviceMemoryProperties memProperties;
     vkGetPhysicalDeviceMemoryProperties(m_context.getPhysicalDevice(), &memProperties);
 
@@ -19,7 +18,7 @@ uint32_t VulkanBufferManager::findMemoryType(uint32_t typeFilter, VkMemoryProper
     throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void VulkanBufferManager::createBuffer(
+void Vulkan::BufferManager::createBuffer(
     VkDeviceSize size,
     VkBufferUsageFlags usage,
     VkMemoryPropertyFlags properties,
@@ -53,7 +52,7 @@ void VulkanBufferManager::createBuffer(
     vkBindBufferMemory(m_context.getDevice(), buffer, bufferMemory, 0);
 }
 
-void VulkanBufferManager::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+void Vulkan::BufferManager::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
     VkCommandBuffer commandBuffer = m_singleTimeCommand.beginSingleTimeCommands(m_context);
 
     VkBufferCopy copyRegion{};

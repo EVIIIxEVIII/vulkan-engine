@@ -7,6 +7,8 @@
 #include <optional>
 #include <vulkan/vulkan_core.h>
 
+namespace Vulkan {
+
 class Window;
 
 struct SwapChainSupportDetails {
@@ -24,10 +26,10 @@ struct QueueFamilyIndices {
     }
 };
 
-class VulkanContext {
+class Context {
 public:
-    VulkanContext();
-    ~VulkanContext();
+    Context();
+    ~Context();
 
     void init(Window& window);
     void cleanup();
@@ -76,3 +78,5 @@ private:
 
     bool m_enableValidationLayers = true;
 };
+
+}

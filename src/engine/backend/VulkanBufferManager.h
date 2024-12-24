@@ -3,14 +3,16 @@
 #include <cstdint>
 #include <vulkan/vulkan_core.h>
 
-class VulkanContext;
-class VulkanSingleTimeCommand;
+namespace Vulkan {
 
-class VulkanBufferManager {
+class SingleTimeCommand;
+class Context;
+
+class BufferManager {
 public:
-    VulkanBufferManager(
-        VulkanContext& context,
-        VulkanSingleTimeCommand& singleTimeCommand
+    BufferManager(
+        Vulkan::Context& context,
+        Vulkan::SingleTimeCommand& singleTimeCommand
     ):
         m_context(context),
         m_singleTimeCommand(singleTimeCommand)
@@ -27,6 +29,9 @@ public:
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
     void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 private:
-    VulkanContext& m_context;
-    VulkanSingleTimeCommand& m_singleTimeCommand;
+    Vulkan::Context& m_context;
+    Vulkan::SingleTimeCommand& m_singleTimeCommand;
 };
+
+
+}

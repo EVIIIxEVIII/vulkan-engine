@@ -6,21 +6,21 @@
 #include <array>
 #include <vulkan/vulkan_core.h>
 
-VulkanDescriptors::VulkanDescriptors() {}
-VulkanDescriptors::~VulkanDescriptors() {}
+Vulkan::Descriptors::Descriptors() {}
+Vulkan::Descriptors::~Descriptors() {}
 
-void VulkanDescriptors::init(VulkanContext& context, uint32_t MAX_FRAMES_IN_FLIGHT) {
+void Vulkan::Descriptors::init(Context& context, uint32_t MAX_FRAMES_IN_FLIGHT) {
     createDescriptorSetLayout(context);
     createDescriptorPool(context, MAX_FRAMES_IN_FLIGHT);
     // createDescriptorSets(context, singleTimeCommand, MAX_FRAMES_IN_FLIGHT);
 }
 
-void VulkanDescriptors::cleanup(VulkanContext& context) {
+void Vulkan::Descriptors::cleanup(Context& context) {
     vkDestroyDescriptorSetLayout(context.getDevice(), m_descriptorSetLayout, nullptr);
     vkDestroyDescriptorPool(context.getDevice(), m_descriptorPool, nullptr);
 }
 
-void VulkanDescriptors::createDescriptorSetLayout(VulkanContext& context) {
+void Vulkan::Descriptors::createDescriptorSetLayout(Context& context) {
     VkDescriptorSetLayoutBinding uboLayoutBinding{};
     uboLayoutBinding.binding = 0;
     uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -47,7 +47,7 @@ void VulkanDescriptors::createDescriptorSetLayout(VulkanContext& context) {
     }
 }
 
-void VulkanDescriptors::createDescriptorPool(VulkanContext& context, uint32_t MAX_FRAMES_IN_FLIGHT) {
+void Vulkan::Descriptors::createDescriptorPool(Context& context, uint32_t MAX_FRAMES_IN_FLIGHT) {
     std::array<VkDescriptorPoolSize, 2> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);

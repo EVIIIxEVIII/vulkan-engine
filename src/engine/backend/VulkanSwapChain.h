@@ -4,17 +4,19 @@
 #include <vector>
 #include <vulkan/vulkan_core.h>
 
-class VulkanContext;
+namespace Vulkan {
+
+class Context;
 class Window;
 
-class VulkanSwapChain {
+class SwapChain {
 public:
-    VulkanSwapChain();
-    ~VulkanSwapChain();
+    SwapChain();
+    ~SwapChain();
 
-    void init(VulkanContext& context, Window& window);
-    void cleanup(VulkanContext& context);
-    void recreate(VulkanContext& context, Window& window);
+    void init(Context& context, Window& window);
+    void cleanup(Context& context);
+    void recreate(Context& context, Window& window);
 
     VkFormat            getImageFormat() const { return m_swapChainFormat; }
     VkExtent2D          getExtent()      const { return m_swapChainExtent; }
@@ -22,9 +24,9 @@ public:
     const std::vector<VkImageView>& getImageViews() const { return m_swapChainImageViews; }
 
 private:
-    void createSwapChain(VulkanContext& context, Window& window);
-    void createImageViews(VulkanContext& context);
-    VkImageView createImageView(VulkanContext& context, VkImage image, VkFormat format);
+    void createSwapChain(Context& context, Window& window);
+    void createImageViews(Context& context);
+    VkImageView createImageView(Context& context, VkImage image, VkFormat format);
 
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
     VkPresentModeKHR   chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
@@ -38,3 +40,5 @@ private:
     VkFormat                 m_swapChainFormat;
     VkExtent2D               m_swapChainExtent;
 };
+
+}

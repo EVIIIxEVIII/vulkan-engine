@@ -6,8 +6,10 @@
 #include <vulkan/vulkan_core.h>
 #include <glm/mat4x4.hpp>
 
-class VulkanContext;
-class VulkanSingleTimeCommand;
+namespace  Vulkan {
+
+class Context;
+class SingleTimeCommand;
 
 struct UniformBufferObject {
     alignas(16) glm::mat4 model;
@@ -15,13 +17,13 @@ struct UniformBufferObject {
     alignas(16) glm::mat4 proj;
 };
 
-class VulkanDescriptors {
+class Descriptors {
 public:
-    VulkanDescriptors();
-    ~VulkanDescriptors();
+    Descriptors();
+    ~Descriptors();
 
-    void init(VulkanContext& context, uint32_t MAX_FRAMES_IN_FLIGHT);
-    void cleanup(VulkanContext& context);
+    void init(Context& context, uint32_t MAX_FRAMES_IN_FLIGHT);
+    void cleanup(Context& context);
 
 public:
     const VkDescriptorSetLayout&    getDescriptorSetLayout() const { return m_descriptorSetLayout; }
@@ -29,9 +31,9 @@ public:
     std::vector<VkDescriptorSet>    getDescriptorSets()      const { return m_descriptorSets; }
 
 private:
-    void createDescriptorSetLayout(VulkanContext& context);
-    void createDescriptorPool(VulkanContext& context, uint32_t MAX_FRAMES_IN_FLIGHT);
-    void createDescriptorSets(VulkanContext& context, VulkanSingleTimeCommand& singleTimeCommand, uint32_t MAX_FRAMES_IN_FLIGHT);
+    void createDescriptorSetLayout(Context& context);
+    void createDescriptorPool(Context& context, uint32_t MAX_FRAMES_IN_FLIGHT);
+    void createDescriptorSets(Context& context, SingleTimeCommand& singleTimeCommand, uint32_t MAX_FRAMES_IN_FLIGHT);
 
 private:
     VkDescriptorSetLayout m_descriptorSetLayout;
@@ -41,3 +43,5 @@ private:
     std::vector<VkDeviceMemory>  m_uniformBuffersMemory;
     std::vector<void*> m_uniformBuffersMapped;
 };
+
+}
