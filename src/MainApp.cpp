@@ -7,7 +7,6 @@ void MainApp::run() {
     while (!window.shouldClose()) {
         glfwPollEvents();
     }
-
 };
 
 

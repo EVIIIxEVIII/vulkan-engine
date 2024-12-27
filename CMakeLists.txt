@@ -13,12 +13,16 @@ find_package(Vulkan REQUIRED)
 # Include directories
 include_directories(${Vulkan_INCLUDE_DIRS})
 
-# Add source files
-file(GLOB_RECURSE SOURCES src/*.cpp)
-file(GLOB_RECURSE HEADERS src/*.h)
+# Add source files, excluding `old_engine`
+file(GLOB_RECURSE ALL_SOURCES src/*.cpp)
+file(GLOB_RECURSE ALL_HEADERS src/*.h)
+
+# Filter out files in the `old_engine` directory
+list(FILTER ALL_SOURCES EXCLUDE REGEX ".*/old_engine/.*")
+list(FILTER ALL_HEADERS EXCLUDE REGEX ".*/old_engine/.*")
 
 # Create the executable
-add_executable(VulkanApp ${SOURCES} ${HEADERS})
+add_executable(VulkanApp ${ALL_SOURCES} ${ALL_HEADERS})
 
 # Link Vulkan library
 target_link_libraries(VulkanApp Vulkan::Vulkan)
@@ -28,3 +32,4 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLFW REQUIRED glfw3)
 include_directories(${GLFW_INCLUDE_DIRS})
 target_link_libraries(VulkanApp ${GLFW_LIBRARIES})
+

@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "Window.hpp"
 #include <GLFW/glfw3.h>
 
 Vulkan::Window::Window(int width, int height, std::string title):

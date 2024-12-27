@@ -1,6 +1,7 @@
 #pragma once
 
-#include "engine/backend/Window.h"
+#include "engine/backend/Window.hpp"
+#include "engine/backend/VulkanPipeline.hpp"
 
 namespace Application {
 
@@ -14,7 +15,7 @@ public:
 
 private:
     Vulkan::Window window{WIDTH, HEIGHT, "Vulkan App"};
-
+    Vulkan::GraphicsPipeline graphicsPipeline{"./src/shaders/vert.spv", "./src/shaders/frag.spv"};
 };
 
 }
