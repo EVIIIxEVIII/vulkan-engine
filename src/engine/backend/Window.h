@@ -1,5 +1,6 @@
 #pragma once
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdexcept>
@@ -10,7 +11,7 @@ class Window {
 
 public:
     Window(int width, int height, std::string title);
-    virtual ~Window();
+    ~Window();
 
     Window(const Window&) = delete;
     Window& operator=(const Window&) = delete;
@@ -19,6 +20,7 @@ public:
     bool isFramebufferResized() const;
 
     void resetFramebufferResized();
+    bool shouldClose() { return glfwWindowShouldClose(window); }
 
 private:
     int width, height;
@@ -27,7 +29,6 @@ private:
     bool frameBufferResized;
 
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
-    void onFramebufferResize(int width, int height);
 };
 
 }

@@ -1,6 +1,7 @@
 #include "Window.h"
+#include <GLFW/glfw3.h>
 
-Window::Window(int width, int height, std::string title):
+Vulkan::Window::Window(int width, int height, std::string title):
     width(width), height(height), title(title), frameBufferResized(false)
 {
     if(!glfwInit()) {
@@ -18,30 +19,28 @@ Window::Window(int width, int height, std::string title):
     glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
 
-GLFWwindow* Window::getGLFWwindow() const {
+GLFWwindow* Vulkan::Window::getGLFWwindow() const {
     return window;
 }
 
-bool Window::isFramebufferResized() const {
+bool Vulkan::Window::isFramebufferResized() const {
     return frameBufferResized;
 }
 
-void Window::resetFramebufferResized() {
+void Vulkan::Window::resetFramebufferResized() {
     frameBufferResized = false;
 }
 
-Window::~Window() {
+Vulkan::Window::~Window() {
     glfwDestroyWindow(window);
     glfwTerminate();
 };
 
-void Window::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+void Vulkan::Window::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
     auto windowInstance = static_cast<Window*>(glfwGetWindowUserPointer(window));
     if (windowInstance) {
-        windowInstance->onFramebufferResize(width, height);
+        windowInstance->frameBufferResized = true;
+        windowInstance->width = width;
+        windowInstance->height = height;
     }
-}
-
-void Window::onFramebufferResize(int width, int height) {
-    frameBufferResized = true;
 }

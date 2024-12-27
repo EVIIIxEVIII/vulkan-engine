@@ -18,7 +18,7 @@ public:
     VkCommandBuffer beginSingleTimeCommands(Context& context);
     void            endSingleTimeCommands(Context& context, VkCommandBuffer commandBuffer);
 
-    VkCommandPool                 getCommandPool()    { return m_commandPool; }
+    VkCommandPool                       getCommandPool()    { return m_commandPool; }
     const std::vector<VkCommandBuffer>& getCommandBuffers() const { return m_commandBuffers; }
 
 private:

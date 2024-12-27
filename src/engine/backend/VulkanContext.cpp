@@ -49,7 +49,7 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
     }
 }
 
-VulkanContext::VulkanContext() {
+Vulkan::Context::Context() {
     #ifndef NDEBUG
         m_enableValidationLayers = true;
     #else
@@ -57,11 +57,11 @@ VulkanContext::VulkanContext() {
     #endif
 }
 
-VulkanContext::~VulkanContext() {
+Vulkan::Context::~Context() {
     // cleanup();
 }
 
-void VulkanContext::cleanup() {
+void Vulkan::Context::cleanup() {
     vkDestroyDevice(m_device, nullptr);
 
     if (m_enableValidationLayers) {
@@ -72,7 +72,7 @@ void VulkanContext::cleanup() {
     vkDestroyInstance(m_instance, nullptr);
 }
 
-void VulkanContext::init(Window& window) {
+void Vulkan::Context::init(Window& window) {
     createInstance();
     setupDebugMessenger();
     createSurface(window);
@@ -81,7 +81,7 @@ void VulkanContext::init(Window& window) {
     createLogicalDevice();
 }
 
-bool VulkanContext::checkValidationLayerSupport() {
+bool Vulkan::Context::checkValidationLayerSupport() {
     uint32_t layerCount;
     vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -105,7 +105,7 @@ bool VulkanContext::checkValidationLayerSupport() {
     return true;
 }
 
-void VulkanContext::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
+void Vulkan::Context::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
     createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
     createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
@@ -113,7 +113,7 @@ void VulkanContext::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreate
     createInfo.pfnUserCallback = debugCallback;
 }
 
-std::vector<const char*> VulkanContext::getRequiredExtensions() {
+std::vector<const char*> Vulkan::Context::getRequiredExtensions() {
     uint32_t glfwExtensionCount = 0;
     const char** glfwExtensions;
     glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -127,7 +127,7 @@ std::vector<const char*> VulkanContext::getRequiredExtensions() {
     return extensions;
 }
 
-void VulkanContext::createInstance() {
+void Vulkan::Context::createInstance() {
     if (m_enableValidationLayers && !checkValidationLayerSupport()) {
         throw std::runtime_error("validation layers requested, but not available!");
     }
@@ -166,7 +166,7 @@ void VulkanContext::createInstance() {
     }
 }
 
-void VulkanContext::setupDebugMessenger() {
+void Vulkan::Context::setupDebugMessenger() {
     if (!m_enableValidationLayers) return;
 
     VkDebugUtilsMessengerCreateInfoEXT createInfo;
@@ -177,13 +177,13 @@ void VulkanContext::setupDebugMessenger() {
     }
 }
 
-void VulkanContext::createSurface(Window& window) {
+void Vulkan::Context::createSurface(Window& window) {
     if (glfwCreateWindowSurface(m_instance, window.getGLFWwindow(), nullptr, &m_surface) != VK_SUCCESS) {
         throw std::runtime_error("failed to create window surface!");
     }
 }
 
-bool VulkanContext::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+bool Vulkan::Context::checkDeviceExtensionSupport(VkPhysicalDevice device) {
     uint32_t extensionCount;
     vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
@@ -199,7 +199,7 @@ bool VulkanContext::checkDeviceExtensionSupport(VkPhysicalDevice device) {
     return requiredExtensions.empty();
 }
 
-SwapChainSupportDetails VulkanContext::querySwapChainSupport(VkPhysicalDevice device) {
+Vulkan::SwapChainSupportDetails Vulkan::Context::querySwapChainSupport(VkPhysicalDevice device) {
     SwapChainSupportDetails details;
 
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_surface, &details.capabilities);
@@ -223,7 +223,7 @@ SwapChainSupportDetails VulkanContext::querySwapChainSupport(VkPhysicalDevice de
     return details;
 }
 
-bool VulkanContext::isDeviceSuitable(VkPhysicalDevice device) {
+bool Vulkan::Context::isDeviceSuitable(VkPhysicalDevice device) {
     QueueFamilyIndices indices = findQueueFamilies(device);
     bool extensionsSupported = checkDeviceExtensionSupport(device);
 
@@ -242,7 +242,7 @@ bool VulkanContext::isDeviceSuitable(VkPhysicalDevice device) {
            supportedFeatures.samplerAnisotropy;
 }
 
-void VulkanContext::pickPhysicalDevice() {
+void Vulkan::Context::pickPhysicalDevice() {
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(m_instance, &deviceCount, nullptr);
 
@@ -266,7 +266,7 @@ void VulkanContext::pickPhysicalDevice() {
     }
 }
 
-QueueFamilyIndices VulkanContext::findQueueFamilies(VkPhysicalDevice device) {
+Vulkan::QueueFamilyIndices Vulkan::Context::findQueueFamilies(VkPhysicalDevice device) {
     QueueFamilyIndices indices;
 
     uint32_t queueFamilyCount = 0;
@@ -298,7 +298,7 @@ QueueFamilyIndices VulkanContext::findQueueFamilies(VkPhysicalDevice device) {
     return indices;
 }
 
-void VulkanContext::createLogicalDevice() {
+void Vulkan::Context::createLogicalDevice() {
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
     std::set<uint32_t> uniqueQueueFamilies = {
         m_queueFamilyIndices.graphicsFamily.value(),
@@ -345,7 +345,7 @@ void VulkanContext::createLogicalDevice() {
     vkGetDeviceQueue(m_device, m_queueFamilyIndices.presentFamily.value(), 0, &m_presentQueue);
 }
 
-VkSampleCountFlagBits VulkanContext::getMaxUsableSampleCount() {
+VkSampleCountFlagBits Vulkan::Context::getMaxUsableSampleCount() {
     VkPhysicalDeviceProperties physicalDeviceProperties;
     vkGetPhysicalDeviceProperties(m_physicalDevice, &physicalDeviceProperties);
 

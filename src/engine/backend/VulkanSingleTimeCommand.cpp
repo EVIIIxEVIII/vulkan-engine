@@ -25,6 +25,7 @@ void Vulkan::SingleTimeCommand::createCommandPool(Context& context) {
     }
 }
 
+// TODO: put command buffer creation into the PipelineCommand class
 void Vulkan::SingleTimeCommand::createCommandBuffers(Context& context, uint32_t MAX_FRAMES_IN_FLIGHT) {
     m_commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
 
