@@ -21,6 +21,7 @@ public:
 
     void resetFramebufferResized();
     bool shouldClose() { return glfwWindowShouldClose(window); }
+    void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
 private:
     int width, height;

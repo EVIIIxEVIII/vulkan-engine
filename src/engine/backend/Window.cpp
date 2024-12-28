@@ -1,5 +1,7 @@
 #include "Window.hpp"
 #include <GLFW/glfw3.h>
+#include <stdexcept>
+#include <vulkan/vulkan_core.h>
 
 Vulkan::Window::Window(int width, int height, std::string title):
     width(width), height(height), title(title), frameBufferResized(false)
@@ -25,6 +27,12 @@ GLFWwindow* Vulkan::Window::getGLFWwindow() const {
 
 bool Vulkan::Window::isFramebufferResized() const {
     return frameBufferResized;
+}
+
+void Vulkan::Window::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface) {
+    if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create window surface");
+    }
 }
 
 void Vulkan::Window::resetFramebufferResized() {

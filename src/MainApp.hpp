@@ -2,6 +2,9 @@
 
 #include "engine/backend/Window.hpp"
 #include "engine/backend/VulkanPipeline.hpp"
+#include "engine/backend/VulkanDevice.hpp"
+
+using namespace Vulkan;
 
 namespace Application {
 
@@ -14,8 +17,14 @@ public:
     void run();
 
 private:
-    Vulkan::Window window{WIDTH, HEIGHT, "Vulkan App"};
-    Vulkan::GraphicsPipeline graphicsPipeline{"./src/shaders/vert.spv", "./src/shaders/frag.spv"};
+    Window window{WIDTH, HEIGHT, "Vulkan App"};
+    Device device{window};
+    GraphicsPipeline graphicsPipeline{
+        device,
+        "./src/shaders/vert.spv",
+        "./src/shaders/frag.spv",
+        GraphicsPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)
+    };
 };
 
 }
