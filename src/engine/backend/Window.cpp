@@ -1,56 +1,41 @@
 #include "Window.hpp"
-#include <GLFW/glfw3.h>
+
+// std
 #include <stdexcept>
-#include <vulkan/vulkan_core.h>
 
-Vulkan::Window::Window(int width, int height, std::string title):
-    width(width), height(height), title(title), frameBufferResized(false)
-{
-    if(!glfwInit()) {
-        throw std::runtime_error("Failed to init GLFW!");
-    }
+namespace Vulkan {
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-    window = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
-    if (!window) {
-        glfwTerminate();
-        throw std::runtime_error("Failed to create GLFW window!");
-    }
-
-    glfwSetWindowUserPointer(window, static_cast<void*>(this));
-    glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+Window::Window(int w, int h, std::string name) : width{w}, height{h}, windowName{name} {
+  initWindow();
 }
 
-GLFWwindow* Vulkan::Window::getGLFWwindow() const {
-    return window;
+Window::~Window() {
+  glfwDestroyWindow(window);
+  glfwTerminate();
 }
 
-bool Vulkan::Window::isFramebufferResized() const {
-    return frameBufferResized;
+void Window::initWindow() {
+  glfwInit();
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+  window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
+  glfwSetWindowUserPointer(window, this);
+  glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
 
-void Vulkan::Window::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface) {
-    if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create window surface");
-    }
+void Window::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface) {
+  if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS) {
+    throw std::runtime_error("failed to craete window surface");
+  }
 }
 
-void Vulkan::Window::resetFramebufferResized() {
-    frameBufferResized = false;
+void Window::framebufferResizeCallback(GLFWwindow *window, int width, int height) {
+  auto Window = reinterpret_cast<class Window*>(glfwGetWindowUserPointer(window));
+  Window->framebufferResized = true;
+  Window->width = width;
+  Window->height = height;
 }
 
-Vulkan::Window::~Window() {
-    glfwDestroyWindow(window);
-    glfwTerminate();
-};
+}  // namespace
 
-void Vulkan::Window::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-    auto windowInstance = static_cast<Window*>(glfwGetWindowUserPointer(window));
-    if (windowInstance) {
-        windowInstance->frameBufferResized = true;
-        windowInstance->width = width;
-        windowInstance->height = height;
-    }
-}
