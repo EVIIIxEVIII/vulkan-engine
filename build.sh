@@ -22,3 +22,15 @@ make || { echo "Make failed"; exit 1; }
 
 echo "Build completed successfully!"
 
+# Navigate to src/shaders and run compile.sh
+SHADER_DIR="../src/shaders"
+if [ -d "$SHADER_DIR" ]; then
+  echo "Navigating to $SHADER_DIR and running compile.sh"
+  cd "$SHADER_DIR" || exit
+  ./compile.sh || { echo "Shader compilation failed"; exit 1; }
+else
+  echo "Shader directory $SHADER_DIR does not exist. Skipping shader compilation."
+fi
+
+echo "Script completed successfully!"
+
