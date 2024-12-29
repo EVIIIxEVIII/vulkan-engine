@@ -1,4 +1,5 @@
 #include "VulkanPipeline.hpp"
+#include "VulkanModel.hpp"
 
 #include <stdexcept>
 #include <string>
@@ -10,17 +11,17 @@
 
 namespace Vulkan {
 
-GraphicsPipeline::GraphicsPipeline(
+Pipeline::Pipeline(
     Device &device,
     const std::string& vertFilepath,
     const std::string& fragFilepath,
     const PipelineConfigInfo& configInfo
 ):  device{device}
 {
-    createGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
+    createPipeline(vertFilepath, fragFilepath, configInfo);
 }
 
-std::vector<char> GraphicsPipeline::readFile(const std::string& filename) {
+std::vector<char> Pipeline::readFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
     if (!file.is_open()) {
@@ -39,7 +40,7 @@ std::vector<char> GraphicsPipeline::readFile(const std::string& filename) {
     return buffer;
 }
 
-void GraphicsPipeline::createGraphicsPipeline(
+void Pipeline::createPipeline(
     const std::string& vertFilepath,
     const std::string& fragFilepath,
     const PipelineConfigInfo& configInfo
@@ -77,12 +78,21 @@ void GraphicsPipeline::createGraphicsPipeline(
     shaderStages[1].pNext = nullptr;
     shaderStages[1].pSpecializationInfo = nullptr;
 
+    VkPipelineViewportStateCreateInfo viewportInfo{};
+    viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+    viewportInfo.viewportCount = 1;
+    viewportInfo.pViewports = &configInfo.viewport;
+    viewportInfo.scissorCount = 1;
+    viewportInfo.pScissors = &configInfo.scissor;
+
+    auto bindingDescriptions = Model::Vertex::getBindingDescriptions();
+    auto attributeDescriptions = Model::Vertex::getAttributeDescriptions();
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    vertexInputInfo.vertexAttributeDescriptionCount = 0;
-    vertexInputInfo.vertexBindingDescriptionCount = 0;
-    vertexInputInfo.pVertexBindingDescriptions = nullptr;
-    vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+    vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+    vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescriptions.size());
+    vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+    vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -90,7 +100,7 @@ void GraphicsPipeline::createGraphicsPipeline(
     pipelineInfo.pStages = shaderStages;
     pipelineInfo.pVertexInputState = &vertexInputInfo;
     pipelineInfo.pInputAssemblyState = &configInfo.inputAssemblyInfo;
-    pipelineInfo.pViewportState = &configInfo.viewportInfo;
+    pipelineInfo.pViewportState = &viewportInfo;
     pipelineInfo.pRasterizationState = &configInfo.rasterizationInfo;
     pipelineInfo.pMultisampleState = &configInfo.multisampleInfo;
     pipelineInfo.pColorBlendState = &configInfo.colorBlendInfo;
@@ -110,7 +120,7 @@ void GraphicsPipeline::createGraphicsPipeline(
           1,
           &pipelineInfo,
           nullptr,
-          &graphicsPipeline) != VK_SUCCESS) {
+          &pipeline) != VK_SUCCESS) {
         throw std::runtime_error("failed to create graphics pipeline!");
     }
 
@@ -119,16 +129,16 @@ void GraphicsPipeline::createGraphicsPipeline(
     std::cout << "Fragment shader size: " << fragCode.size() << "\n";
 }
 
-GraphicsPipeline::~GraphicsPipeline() {
+Pipeline::~Pipeline() {
     vkDestroyShaderModule(device.device(), fragShaderModule, nullptr);
     vkDestroyShaderModule(device.device(), vertShaderModule, nullptr);
-    vkDestroyPipeline(device.device(), graphicsPipeline, nullptr);
+    vkDestroyPipeline(device.device(), pipeline, nullptr);
 
     fragShaderModule = VK_NULL_HANDLE;
     vertShaderModule = VK_NULL_HANDLE;
 }
 
-void GraphicsPipeline::createShaderModule(const std::vector<char>& code, VkShaderModule *shaderModule) {
+void Pipeline::createShaderModule(const std::vector<char>& code, VkShaderModule *shaderModule) {
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.codeSize = code.size();
@@ -139,7 +149,7 @@ void GraphicsPipeline::createShaderModule(const std::vector<char>& code, VkShade
     }
 }
 
-PipelineConfigInfo GraphicsPipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height) {
+PipelineConfigInfo Pipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height) {
     PipelineConfigInfo configInfo{};
 
     configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -154,13 +164,7 @@ PipelineConfigInfo GraphicsPipeline::defaultPipelineConfigInfo(uint32_t width, u
     configInfo.viewport.maxDepth = 1.0f;
 
     configInfo.scissor.offset = {0, 0};
-    configInfo.scissor.extent = {0, 0};
-
-    configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-    configInfo.viewportInfo.viewportCount = 1;
-    configInfo.viewportInfo.pViewports = &configInfo.viewport;
-    configInfo.viewportInfo.scissorCount = 1;
-    configInfo.viewportInfo.pScissors = &configInfo.scissor;
+    configInfo.scissor.extent = {width, height};
 
     configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;
@@ -215,6 +219,10 @@ PipelineConfigInfo GraphicsPipeline::defaultPipelineConfigInfo(uint32_t width, u
     configInfo.depthStencilInfo.back = {};   // Optional
 
     return configInfo;
+}
+
+void Pipeline::bind(VkCommandBuffer commandBuffer) {
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 }
 
 }

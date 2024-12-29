@@ -1,8 +1,13 @@
 #pragma once
 
+#include <vector>
+#include <memory>
+
 #include "engine/backend/Window.hpp"
 #include "engine/backend/VulkanPipeline.hpp"
 #include "engine/backend/VulkanDevice.hpp"
+#include "engine/backend/VulkanSwapChain.hpp"
+#include "engine/backend/VulkanModel.hpp"
 
 using namespace Vulkan;
 
@@ -14,17 +19,28 @@ public:
     static constexpr int WIDTH = 800;
     static constexpr int HEIGHT = 800;
 
+    MainApp();
+    ~MainApp();
+
+    MainApp(const MainApp&) = delete;
+    MainApp operator=(const MainApp&) = delete;
+
     void run();
 
 private:
+    void loadModels();
+    void createPipelineLayout();
+    void createPipeline();
+    void createCommandBuffers();
+    void drawFrame();
+
     Window window{WIDTH, HEIGHT, "Vulkan App"};
     Device device{window};
-    GraphicsPipeline graphicsPipeline{
-        device,
-        "./src/shaders/vert.spv",
-        "./src/shaders/frag.spv",
-        GraphicsPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)
-    };
+    SwapChain swapChain{device, window.getExtent()};
+    std::unique_ptr<Pipeline> pipeline;
+    VkPipelineLayout pipelineLayout;
+    std::vector<VkCommandBuffer> commandBuffers;
+    std::unique_ptr<Model> model;
 };
 
 }

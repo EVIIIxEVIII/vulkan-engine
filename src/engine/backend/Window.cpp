@@ -11,6 +11,8 @@ Vulkan::Window::Window(int width, int height, std::string title):
     }
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
     window = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
     if (!window) {
         glfwTerminate();
