@@ -2,6 +2,7 @@
 #include "engine/backend/VulkanSceneObject.hpp"
 #include "engine/backend/VulkanSimpleRenderSystem.hpp"
 #include "engine/backend/VulkanCamera.hpp"
+#include "engine/backend/VulkanMovementController.hpp"
 
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float2x2.hpp>
@@ -9,6 +10,7 @@
 #include <memory>
 #include <vulkan/vulkan_core.h>
 #include <glm/gtc/constants.hpp>
+#include <chrono>
 
 namespace Application {
 
@@ -22,14 +24,26 @@ void MainApp::run() {
     SimpleRenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass()};
     Camera camera{};
     // camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5, 0.f, 1.f));
-
     camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
+
+    auto viewerObject = SceneObject::createSceneObject();
+    MovementController cameraController{};
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
 
     while (!window.shouldClose()) {
         glfwPollEvents();
+
+        auto newTime = std::chrono::high_resolution_clock::now();
+        float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+        currentTime = newTime;
+
+        cameraController.moveInPlaneXZ(window.getGLFWWindow(), frameTime, viewerObject);
+        camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
+
         float aspect = renderer.getAspectRatio();
         // camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-        camera.setPerspectiveProjection(glm::radians(120.f), aspect, 0.1f, 10.f);
+        camera.setPerspectiveProjection(glm::radians(90.f), aspect, 0.1f, 10.f);
 
         if (auto commandBuffer = renderer.beginFrame()) {
             renderer.beginSwapChainRenderPass(commandBuffer);
