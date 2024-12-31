@@ -4,7 +4,6 @@
 #include "VulkanSceneObject.hpp"
 
 #include <memory>
-#include <array>
 #include <stdexcept>
 #include <vulkan/vulkan_core.h>
 #include <glm/gtc/constants.hpp>
@@ -13,7 +12,7 @@ namespace Vulkan {
 
 struct SimplePushConstantData {
     alignas(16) glm::mat4 transform{1.f};
-    alignas(16) glm::vec3 color;
+    alignas(16) glm::mat4 modelMatrix{1.f};
 };
 
 SimpleRenderSystem::SimpleRenderSystem(Device& device, VkRenderPass renderPass):
@@ -70,8 +69,9 @@ void SimpleRenderSystem::renderSceneObjects(
 
     for (auto& obj: sceneObjects) {
         SimplePushConstantData push{};
-        push.color = obj.color;
-        push.transform = projectionView * obj.transform.mat4();
+        auto modelMatrix = obj.transform.mat4();
+        push.transform = projectionView * modelMatrix;
+        push.modelMatrix = modelMatrix;
 
         vkCmdPushConstants(
             commandBuffer,
