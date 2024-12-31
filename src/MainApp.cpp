@@ -1,9 +1,11 @@
 #include "MainApp.hpp"
 #include "engine/backend/VulkanSceneObject.hpp"
 #include "engine/backend/VulkanSimpleRenderSystem.hpp"
+#include "engine/backend/VulkanCamera.hpp"
 
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float2x2.hpp>
+#include <glm/trigonometric.hpp>
 #include <memory>
 #include <vulkan/vulkan_core.h>
 #include <glm/gtc/constants.hpp>
@@ -18,12 +20,20 @@ MainApp::~MainApp() {}
 
 void MainApp::run() {
     SimpleRenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass()};
+    Camera camera{};
+    // camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5, 0.f, 1.f));
+
+    camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
 
     while (!window.shouldClose()) {
         glfwPollEvents();
+        float aspect = renderer.getAspectRatio();
+        // camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+        camera.setPerspectiveProjection(glm::radians(120.f), aspect, 0.1f, 10.f);
+
         if (auto commandBuffer = renderer.beginFrame()) {
             renderer.beginSwapChainRenderPass(commandBuffer);
-            simpleRenderSystem.renderSceneObjects(commandBuffer, sceneObjects);
+            simpleRenderSystem.renderSceneObjects(commandBuffer, sceneObjects, camera);
             renderer.endSwapChainRenderPass(commandBuffer);
             renderer.endFrame();
         }
@@ -96,7 +106,7 @@ void MainApp::loadSceneObjects() {
 
     auto cube = SceneObject::createSceneObject();
     cube.model = model;
-    cube.transform.translation = {.0f, .0f, .5f};
+    cube.transform.translation = {.0f, .0f, 2.5f};
     cube.transform.scale = {.5f, .5f, .5f};
 
     sceneObjects.push_back(std::move(cube));

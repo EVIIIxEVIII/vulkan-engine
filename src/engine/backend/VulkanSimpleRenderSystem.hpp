@@ -7,6 +7,7 @@
 #include "VulkanPipeline.hpp"
 #include "VulkanDevice.hpp"
 #include "VulkanSceneObject.hpp"
+#include "VulkanCamera.hpp"
 
 namespace Vulkan {
 
@@ -19,7 +20,11 @@ public:
     SimpleRenderSystem(const SimpleRenderSystem&) = delete;
     SimpleRenderSystem operator=(const SimpleRenderSystem&) = delete;
 
-    void renderSceneObjects(VkCommandBuffer commandBuffer, std::vector<SceneObject> &sceneObjects);
+    void renderSceneObjects(
+        VkCommandBuffer commandBuffer,
+        std::vector<SceneObject> &sceneObjects,
+        const Camera& camera
+    );
 
 private:
     void createPipelineLayout();

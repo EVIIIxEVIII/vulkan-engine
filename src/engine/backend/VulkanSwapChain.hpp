@@ -30,7 +30,7 @@ public:
     uint32_t height() { return swapChainExtent.height; }
 
     float extentAspectRatio() {
-    return static_cast<float>(swapChainExtent.width) / static_cast<float>(swapChainExtent.height);
+        return static_cast<float>(swapChainExtent.width) / static_cast<float>(swapChainExtent.height);
     }
     VkFormat findDepthFormat();
 

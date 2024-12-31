@@ -59,8 +59,14 @@ void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
     );
 }
 
-void SimpleRenderSystem::renderSceneObjects(VkCommandBuffer commandBuffer, std::vector<SceneObject> &sceneObjects) {
+void SimpleRenderSystem::renderSceneObjects(
+    VkCommandBuffer commandBuffer,
+    std::vector<SceneObject> &sceneObjects,
+    const Camera& camera
+) {
     pipeline->bind(commandBuffer);
+
+    auto projectionView = camera.getProjection() * camera.getView();
 
     for (auto& obj: sceneObjects) {
         obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.01f, glm::two_pi<float>());
@@ -68,7 +74,7 @@ void SimpleRenderSystem::renderSceneObjects(VkCommandBuffer commandBuffer, std::
 
         SimplePushConstantData push{};
         push.color = obj.color;
-        push.transform = obj.transform.mat4();
+        push.transform = projectionView * obj.transform.mat4();
 
         vkCmdPushConstants(
             commandBuffer,
