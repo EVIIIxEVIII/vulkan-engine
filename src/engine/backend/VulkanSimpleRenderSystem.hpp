@@ -8,26 +8,23 @@
 #include "VulkanDevice.hpp"
 #include "VulkanSceneObject.hpp"
 #include "VulkanCamera.hpp"
+#include "VulkanFrameInfo.hpp"
 
 namespace Vulkan {
 
 class SimpleRenderSystem {
 
 public:
-    SimpleRenderSystem(Device& device, VkRenderPass renderPass);
+    SimpleRenderSystem(Device& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
     ~SimpleRenderSystem();
 
     SimpleRenderSystem(const SimpleRenderSystem&) = delete;
     SimpleRenderSystem operator=(const SimpleRenderSystem&) = delete;
 
-    void renderSceneObjects(
-        VkCommandBuffer commandBuffer,
-        std::vector<SceneObject> &sceneObjects,
-        const Camera& camera
-    );
+    void renderSceneObjects(FrameInfo &frameInfo, std::vector<SceneObject> &sceneObjects);
 
 private:
-    void createPipelineLayout();
+    void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
     void createPipeline(VkRenderPass renderPass);
 
     Device& device;

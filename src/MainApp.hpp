@@ -4,6 +4,7 @@
 #include "engine/backend/VulkanDevice.hpp"
 #include "engine/backend/VulkanRenderer.hpp"
 #include "engine/backend/VulkanSceneObject.hpp"
+#include "engine/backend/VulkanDescriptors.hpp"
 
 using namespace Vulkan;
 
@@ -30,6 +31,7 @@ private:
     Device device{window};
     Renderer renderer{window, device};
 
+    std::unique_ptr<DescriptorPool> globalPool{};
     std::vector<SceneObject> sceneObjects;
 };
 

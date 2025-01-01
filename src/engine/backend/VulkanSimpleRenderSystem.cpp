@@ -11,14 +11,13 @@
 namespace Vulkan {
 
 struct SimplePushConstantData {
-    alignas(16) glm::mat4 transform{1.f};
     alignas(16) glm::mat4 modelMatrix{1.f};
 };
 
-SimpleRenderSystem::SimpleRenderSystem(Device& device, VkRenderPass renderPass):
+SimpleRenderSystem::SimpleRenderSystem(Device& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout):
     device(device)
 {
-    createPipelineLayout();
+    createPipelineLayout(globalSetLayout);
     createPipeline(renderPass);
 }
 
@@ -26,16 +25,18 @@ SimpleRenderSystem::~SimpleRenderSystem() {
     vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
 }
 
-void SimpleRenderSystem::createPipelineLayout() {
+void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {
     VkPushConstantRange pushConstantRange{};
     pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
     pushConstantRange.offset = 0;
     pushConstantRange.size = sizeof(SimplePushConstantData);
 
+    std::vector<VkDescriptorSetLayout> descriptorSetLayouts{globalSetLayout};
+
     VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
     pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutCreateInfo.setLayoutCount = 0;
-    pipelineLayoutCreateInfo.pSetLayouts = nullptr;
+    pipelineLayoutCreateInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
+    pipelineLayoutCreateInfo.pSetLayouts = descriptorSetLayouts.data();
     pipelineLayoutCreateInfo.pushConstantRangeCount = 1;
     pipelineLayoutCreateInfo.pPushConstantRanges = &pushConstantRange;
     if (vkCreatePipelineLayout(device.device(), &pipelineLayoutCreateInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
@@ -59,22 +60,28 @@ void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
 }
 
 void SimpleRenderSystem::renderSceneObjects(
-    VkCommandBuffer commandBuffer,
-    std::vector<SceneObject> &sceneObjects,
-    const Camera& camera
+    FrameInfo &frameInfo,
+    std::vector<SceneObject> &sceneObjects
 ) {
-    pipeline->bind(commandBuffer);
+    pipeline->bind(frameInfo.commandBuffer);
 
-    auto projectionView = camera.getProjection() * camera.getView();
+    vkCmdBindDescriptorSets(
+        frameInfo.commandBuffer,
+        VK_PIPELINE_BIND_POINT_GRAPHICS,
+        pipelineLayout,
+        0, 1,
+        &frameInfo.globalDescriptorSet,
+        0, nullptr
+    );
+
+    auto projectionView = frameInfo.camera.getProjection() * frameInfo.camera.getView();
 
     for (auto& obj: sceneObjects) {
         SimplePushConstantData push{};
-        auto modelMatrix = obj.transform.mat4();
-        push.transform = projectionView * modelMatrix;
-        push.modelMatrix = modelMatrix;
+        push.modelMatrix = obj.transform.mat4();
 
         vkCmdPushConstants(
-            commandBuffer,
+            frameInfo.commandBuffer,
             pipelineLayout,
             VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
             0,
@@ -82,8 +89,8 @@ void SimpleRenderSystem::renderSceneObjects(
             &push
         );
 
-        obj.model->bind(commandBuffer);
-        obj.model->draw(commandBuffer);
+        obj.model->bind(frameInfo.commandBuffer);
+        obj.model->draw(frameInfo.commandBuffer);
     }
 }
 
