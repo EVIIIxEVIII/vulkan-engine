@@ -102,7 +102,8 @@ void MainApp::run() {
                 frameTime,
                 commandBuffer,
                 camera,
-                globalDescriptorSets[frameIndex]
+                globalDescriptorSets[frameIndex],
+                sceneObjects
             };
 
             // update data
@@ -113,7 +114,7 @@ void MainApp::run() {
 
             // render
             renderer.beginSwapChainRenderPass(commandBuffer);
-            simpleRenderSystem.renderSceneObjects(frameInfo, sceneObjects);
+            simpleRenderSystem.renderSceneObjects(frameInfo);
             renderer.endSwapChainRenderPass(commandBuffer);
             renderer.endFrame();
         }
@@ -123,26 +124,26 @@ void MainApp::run() {
 };
 
 void MainApp::loadSceneObjects() {
-    std::shared_ptr<Model> model = Model::createModelFromFile(device, "models/flat_vase.obj");
+    std::shared_ptr<Model> model = Model::createModelFromFile(device, "models/smooth_vase.obj");
     auto sceneObj = SceneObject::createSceneObject();
     sceneObj.model = model;
     sceneObj.transform.translation = {.0f, .5f, 1.f};
     sceneObj.transform.scale = 10.f;
-    sceneObjects.push_back(std::move(sceneObj));
+    sceneObjects.emplace(sceneObj.getId(), std::move(sceneObj));
 
-    std::shared_ptr<Model> model2 = Model::createModelFromFile(device, "models/flat_vase.obj");
+    std::shared_ptr<Model> model2 = Model::createModelFromFile(device, "models/smooth_vase.obj");
     auto sceneObj2 = SceneObject::createSceneObject();
     sceneObj2.model = model2;
     sceneObj2.transform.translation = {2.f, .1f, 1.f};
     sceneObj2.transform.scale = 5.f;
-    sceneObjects.push_back(std::move(sceneObj2));
+    sceneObjects.emplace(sceneObj2.getId(), std::move(sceneObj2));
 
     std::shared_ptr<Model> floor = Model::createModelFromFile(device, "models/quad.obj");
     auto floorObj = SceneObject::createSceneObject();
     floorObj.model = floor;
     floorObj.transform.translation = {0.f, -0.5f, 0.f};
     floorObj.transform.scale = 3.f;
-    sceneObjects.push_back(std::move(floorObj));
+    sceneObjects.emplace(floorObj.getId(), std::move(floorObj));
 }
 
 }

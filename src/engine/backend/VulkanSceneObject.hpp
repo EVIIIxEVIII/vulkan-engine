@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/ext/matrix_float2x2.hpp>
 #include <memory>
+#include <unordered_map>
 
 namespace Vulkan {
 
@@ -20,6 +21,7 @@ struct TransformComponent {
 class SceneObject {
 public:
     using id_t = unsigned int;
+    using Map = std::unordered_map<id_t, SceneObject>;
 
     static SceneObject createSceneObject() {
         static id_t currentId = 0;

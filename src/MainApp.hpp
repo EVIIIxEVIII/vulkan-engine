@@ -32,7 +32,7 @@ private:
     Renderer renderer{window, device};
 
     std::unique_ptr<DescriptorPool> globalPool{};
-    std::vector<SceneObject> sceneObjects;
+    SceneObject::Map sceneObjects;
 };
 
 }

@@ -60,8 +60,7 @@ void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
 }
 
 void SimpleRenderSystem::renderSceneObjects(
-    FrameInfo &frameInfo,
-    std::vector<SceneObject> &sceneObjects
+    FrameInfo &frameInfo
 ) {
     pipeline->bind(frameInfo.commandBuffer);
 
@@ -76,7 +75,10 @@ void SimpleRenderSystem::renderSceneObjects(
 
     auto projectionView = frameInfo.camera.getProjection() * frameInfo.camera.getView();
 
-    for (auto& obj: sceneObjects) {
+    for (auto& kv: frameInfo.sceneObjects) {
+        auto& obj = kv.second;
+        if (obj.model == nullptr) continue;
+
         SimplePushConstantData push{};
         push.modelMatrix = obj.transform.mat4();
 
