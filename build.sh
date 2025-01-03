@@ -14,7 +14,7 @@ cd "$BUILD_DIR" || exit
 
 # Run cmake
 echo "Running cmake .."
-cmake .. || { echo "CMake failed"; exit 1; }
+cmake -S ../ -B . || { echo "CMake failed"; exit 1; }
 
 # Run make
 echo "Running make"

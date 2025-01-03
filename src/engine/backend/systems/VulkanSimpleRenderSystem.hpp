@@ -4,11 +4,11 @@
 #include <memory>
 #include <vulkan/vulkan_core.h>
 
-#include "VulkanPipeline.hpp"
-#include "VulkanDevice.hpp"
-#include "VulkanSceneObject.hpp"
-#include "VulkanCamera.hpp"
-#include "VulkanFrameInfo.hpp"
+#include "../VulkanPipeline.hpp"
+#include "../VulkanDevice.hpp"
+#include "../VulkanSceneObject.hpp"
+#include "../VulkanCamera.hpp"
+#include "../VulkanFrameInfo.hpp"
 
 namespace Vulkan {
 

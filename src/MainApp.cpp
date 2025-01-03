@@ -1,11 +1,13 @@
 #include "MainApp.hpp"
 #include "engine/backend/VulkanDescriptors.hpp"
 #include "engine/backend/VulkanSceneObject.hpp"
-#include "engine/backend/VulkanSimpleRenderSystem.hpp"
 #include "engine/backend/VulkanCamera.hpp"
 #include "engine/backend/VulkanMovementController.hpp"
 #include "engine/backend/VulkanBuffer.hpp"
 #include "engine/backend/VulkanSwapChain.hpp"
+
+#include "engine/backend/systems/VulkanSimpleRenderSystem.hpp"
+#include "engine/backend/systems/VulkanPointLightSystem.hpp"
 
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float2x2.hpp>
@@ -19,7 +21,8 @@
 namespace Application {
 
 struct GlobalUbo {
-    glm::mat4 projectionView{1.f};
+    glm::mat4 projection{1.f};
+    glm::mat4 view{1.f};
     glm::vec4 ambientLightColor{1.f, 1.f, 1.f, 0.02f}; // alpha is the intensity
     glm::vec3 lightPosition{-1.f};
     alignas(16) glm::vec4 lightColor{1.f}; // alpha is the intensity
@@ -70,6 +73,12 @@ void MainApp::run() {
         globalSetLayout->getDescriptorSetLayout()
     };
 
+    PointLightSystem pointLightSystem{
+        device,
+        renderer.getSwapChainRenderPass(),
+        globalSetLayout->getDescriptorSetLayout()
+    };
+
     Camera camera{};
     // camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5, 0.f, 1.f));
     camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
@@ -108,13 +117,15 @@ void MainApp::run() {
 
             // update data
             GlobalUbo ubo{};
-            ubo.projectionView = camera.getProjection() * camera.getView();
+            ubo.projection = camera.getProjection();
+            ubo.view = camera.getView();
             uboBuffers[frameIndex]->writeToBuffer((void*)&ubo);
             uboBuffers[frameIndex]->flush();
 
             // render
             renderer.beginSwapChainRenderPass(commandBuffer);
             simpleRenderSystem.renderSceneObjects(frameInfo);
+            pointLightSystem.render(frameInfo);
             renderer.endSwapChainRenderPass(commandBuffer);
             renderer.endFrame();
         }

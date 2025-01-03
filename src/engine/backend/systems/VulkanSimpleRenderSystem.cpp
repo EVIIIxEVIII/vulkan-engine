@@ -1,7 +1,7 @@
 #include "VulkanSimpleRenderSystem.hpp"
 
-#include "VulkanPipeline.hpp"
-#include "VulkanSceneObject.hpp"
+#include "../VulkanPipeline.hpp"
+#include "../VulkanSceneObject.hpp"
 
 #include <memory>
 #include <stdexcept>
