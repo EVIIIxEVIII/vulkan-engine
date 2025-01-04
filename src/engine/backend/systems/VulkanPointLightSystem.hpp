@@ -1,13 +1,10 @@
 #pragma once
 
-#include <vector>
 #include <memory>
 #include <vulkan/vulkan_core.h>
 
 #include "../VulkanPipeline.hpp"
 #include "../VulkanDevice.hpp"
-#include "../VulkanSceneObject.hpp"
-#include "../VulkanCamera.hpp"
 #include "../VulkanFrameInfo.hpp"
 
 namespace Vulkan {
@@ -21,6 +18,7 @@ public:
     PointLightSystem(const PointLightSystem&) = delete;
     PointLightSystem operator=(const PointLightSystem&) = delete;
 
+    void update(FrameInfo &frameInfo, GlobalUbo &ubo);
     void render(FrameInfo &frameInfo);
 
 private:

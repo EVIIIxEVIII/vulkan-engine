@@ -1,6 +1,5 @@
 #include "VulkanSceneObject.hpp"
-
-
+#include <memory>
 
 namespace Vulkan {
 
@@ -31,6 +30,15 @@ glm::mat4 TransformComponent::mat4() {
             0.0f,
         },
         {translation.x, translation.y, translation.z, 1.0f}};
+}
+
+SceneObject SceneObject::makePointLight(float intensity, float radius, glm::vec3 color) {
+    SceneObject sceneObj = SceneObject::createSceneObject();
+    sceneObj.color = color;
+    sceneObj.transform.scale = radius;
+    sceneObj.pointLight = std::make_unique<PointLightComponent>();
+    sceneObj.pointLight->lightIntensity = intensity;
+    return sceneObj;
 }
 
 }

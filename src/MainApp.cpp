@@ -11,6 +11,7 @@
 
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float2x2.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/geometric.hpp>
 #include <glm/trigonometric.hpp>
 #include <memory>
@@ -20,13 +21,6 @@
 
 namespace Application {
 
-struct GlobalUbo {
-    glm::mat4 projection{1.f};
-    glm::mat4 view{1.f};
-    glm::vec4 ambientLightColor{1.f, 1.f, 1.f, 0.02f}; // alpha is the intensity
-    glm::vec3 lightPosition{-1.f};
-    alignas(16) glm::vec4 lightColor{1.f}; // alpha is the intensity
-};
 
 MainApp::MainApp() {
     globalPool = DescriptorPool::Builder(device)
@@ -119,6 +113,7 @@ void MainApp::run() {
             GlobalUbo ubo{};
             ubo.projection = camera.getProjection();
             ubo.view = camera.getView();
+            pointLightSystem.update(frameInfo, ubo);
             uboBuffers[frameIndex]->writeToBuffer((void*)&ubo);
             uboBuffers[frameIndex]->flush();
 
@@ -155,6 +150,29 @@ void MainApp::loadSceneObjects() {
     floorObj.transform.translation = {0.f, -0.5f, 0.f};
     floorObj.transform.scale = 3.f;
     sceneObjects.emplace(floorObj.getId(), std::move(floorObj));
+
+    std::vector<glm::vec3> lightColors{
+      {1.f, .1f, .1f},
+      {.1f, .1f, 1.f},
+      {.1f, 1.f, .1f},
+      {1.f, 1.f, .1f},
+      {.1f, 1.f, 1.f},
+      {1.f, 1.f, 1.f}
+    };
+
+    for (int i = 0; i < lightColors.size(); i++) {
+        auto pointLight = SceneObject::makePointLight(0.2f);
+        pointLight.color = lightColors[i];
+        auto rotateLight = glm::rotate(
+            glm::mat4(1.f),
+            (i * glm::two_pi<float>()) / lightColors.size(),
+            { 0.f, -1.f, 0.f}
+        );
+
+        pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-2.f, -3.f, -1.f, 1.f));
+        sceneObjects.emplace(pointLight.getId(), std::move(pointLight));
+    }
+
 }
 
 }
