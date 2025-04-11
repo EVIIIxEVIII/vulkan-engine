@@ -113,6 +113,7 @@ void MainApp::run() {
             GlobalUbo ubo{};
             ubo.projection = camera.getProjection();
             ubo.view = camera.getView();
+            ubo.inverseView = camera.getInverseView();
             pointLightSystem.update(frameInfo, ubo);
             uboBuffers[frameIndex]->writeToBuffer((void*)&ubo);
             uboBuffers[frameIndex]->flush();
@@ -147,7 +148,7 @@ void MainApp::loadSceneObjects() {
     std::shared_ptr<Model> floor = Model::createModelFromFile(device, "models/quad.obj");
     auto floorObj = SceneObject::createSceneObject();
     floorObj.model = floor;
-    floorObj.transform.translation = {0.f, -0.5f, 0.f};
+    floorObj.transform.translation = {0.f, 0.1f, 0.f};
     floorObj.transform.scale = 3.f;
     sceneObjects.emplace(floorObj.getId(), std::move(floorObj));
 
@@ -161,7 +162,7 @@ void MainApp::loadSceneObjects() {
     };
 
     for (int i = 0; i < lightColors.size(); i++) {
-        auto pointLight = SceneObject::makePointLight(0.2f);
+        auto pointLight = SceneObject::makePointLight(0.4f);
         pointLight.color = lightColors[i];
         auto rotateLight = glm::rotate(
             glm::mat4(1.f),

@@ -66,7 +66,8 @@ void PointLightSystem::createPipeline(VkRenderPass renderPass) {
 void PointLightSystem::update(FrameInfo &frameInfo, GlobalUbo &ubo) {
     auto rotateLight = glm::rotate(
         glm::mat4(1.f),
-        frameInfo.frameTime,
+        // frameInfo.frameTime,
+        0.f,
         { 0.f, -1.f, 0.f}
     );
 
